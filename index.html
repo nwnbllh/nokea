@@ -468,32 +468,24 @@ function renderCart() {
   </section>`;
 }
 
-async function placeOrder() {
-  const btn = document.getElementById('place-order-btn');
-  btn.disabled = true; btn.textContent = 'Memproses...';
-  for (const item of cart) {
-    if (orders.length >= 999) { showToast('Batas pesanan tercapai!'); btn.disabled = false; btn.textContent = 'Place Order'; return; }
-    const result = await window.dataSdk.create({
-      product_name: item.name, product_id: item.id, quantity: item.qty, size: item.size, price: item.price * item.qty, status: 'diproses', order_date: new Date().toISOString(),
-      user_name: currentUser ? currentUser.name : '', user_email: currentUser ? currentUser.email : '', user_phone: currentUser ? currentUser.phone : '', user_address: currentUser ? currentUser.address : '', user_profile_id: currentUser ? currentUser.id : 0
-    });
-    if (result.isOk) {
-    orders.push({
-        __backendId: result.data.id,
-        product_id: item.id,
-        product_name: item.name,
-        quantity: item.qty,
-        size: item.size,
-        price: item.price * item.qty,
-        status: 'diproses',
-        order_date: new Date().toISOString()
-    });
-}
-    if (result.isError) { showToast('Gagal membuat pesanan'); btn.disabled = false; btn.textContent = 'Place Order'; return; }
-  }
-  cart = []; updateCartBadge(); showToast('Order berhasil!'); navigate('orders');
-}
+orders.unshift({
+    product_name: item.name,
+    product_id: item.id,
+    quantity: item.qty,
+    size: item.size,
+    price: item.price * item.qty,
+    status: 'diproses',
+    order_date: new Date().toISOString()
+});
 
+cart = [];
+
+updateCartBadge();
+
+navigate('orders');
+
+window.dataSdk.create({...}); // kirim ke backend tanpa menunggu
+    
 function renderOrders() {
   const app = document.getElementById('app');
   const statusTabs = ['semua','diproses','dikirim','selesai'];
