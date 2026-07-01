@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="id"><head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260630-05-8900874"}');</script><script src="/_sdk/e4192b04afde3ce7.telemetry_sdk.js" integrity="sha512-4eZpyKBd3YJnsIPrIpaBqo7QT5UZ6+KSFXkSu1IQiB7jKM8y67ChRhZ5Yh6JfuOJCbPdISiNcS6nLKZzIMG1uQ=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOKEA - Tradition Re-imagined</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Libre Franklin', sans-serif; }
+    .font-display { font-family: 'Playfair Display', serif; }
+    .line-through-price { text-decoration: line-through; color: #999; font-size: 0.85em; }
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; transform: translateY(100px); opacity: 0; transition: all 0.3s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .search-overlay { position: fixed; inset: 0; z-index: 9998; background: rgba(0,0,0,0.6); display: none; align-items: flex-start; justify-content: center; padding-top: 120px; }
+    .search-overlay.active { display: flex; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .product-card { transition: all 0.3s ease; }
+    .page-enter { animation: fadeSlideIn 0.4s ease forwards; }
+    @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-link { position: relative; padding-bottom: 2px; }
+    .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #c77b2e; transition: width 0.3s; }
+    .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+    .mobile-menu { transform: translateX(-100%); transition: transform 0.3s ease; }
+    .mobile-menu.open { transform: translateX(0); }
+    .img-pool { display: none; }
+    .tab-active { border-bottom: 2px solid #3d2814; font-weight: 600; }
+    .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+    .color-swatch.selected { border-color: #3d2814; box-shadow: 0 0 0 2px #c77b2e; }
+    .carousel-container { position: relative; width: 100%; height: 100%; overflow: hidden; }
+    .carousel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
+    .carousel-slide.active { opacity: 1; }
+    .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 44px; height: 44px; border: none; background: rgba(255,255,255,0.3); hover\:background: rgba(255,255,255,0.5); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; border-radius: 4px; }
+    .carousel-btn:hover { background: rgba(255,255,255,0.5); }
+    .carousel-btn.prev { left: 16px; }
+    .carousel-btn.next { right: 16px; }
+    .carousel-dots { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; gap: 8px; }
+    .carousel-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: background 0.3s; }
+    .carousel-dot.active { background: white; }
+    .scroll-section { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .scroll-section.visible { opacity: 1; transform: translateY(0); }
+  </style>
+  <script src="/_sdk/48bf7c4c70d0d03c.data_sdk.js" integrity="sha512-e/yrQJz+prdXXt4yUvxXhl1WBGu3BRkP8X0fipGXI5gqiFClI7wI6K3TQnD7d63vx+BVhwzIvY6r8OrpX7lXJA=="></script>
+  <script src="/_sdk/5d8c692e132d2125.resizing_sdk.js" type="text/javascript" integrity="sha512-/Du3Fqe12kKsCd3BrbaNQEPtMxQi9S5hbJhnTf09AAilpqYsGa4N0rnimSX1Ui4dwNElKlen6VlI+E1n/NEfrA=="></script>
+ </head>
+ <body data-template-id="__page-root" class="w-full min-h-screen bg-[#faf7f4]" style="background: rgb(250, 247, 244);">
+  <div id="toast" class="toast bg-[#3d2814] text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"><i data-lucide="check-circle" style="width:20px;height:20px;"></i><span id="toast-msg">Berhasil!</span>
+  </div>
+  <div id="search-overlay" class="search-overlay">
+   <div class="bg-white rounded-xl p-6 w-full max-w-lg mx-4 shadow-2xl">
+    <div class="flex items-center gap-3 mb-4"><i data-lucide="search" style="width:20px;height:20px;color:#3d2814;"></i> <input id="search-input" type="text" placeholder="Cari produk..." class="flex-1 outline-none text-lg border-b-2 border-[#c77b2e] pb-1"> <button onclick="closeSearch()" class="p-1"><i data-lucide="x" style="width:20px;height:20px;"></i></button>
+    </div>
+    <div id="search-results" class="max-h-64 overflow-y-auto"></div>
+   </div>
+  </div>
+  <div id="mobile-menu" class="mobile-menu fixed inset-0 z-[60] bg-[#3d2814] text-white flex flex-col p-6">
+   <div class="flex justify-end mb-8">
+    <button onclick="closeMobile()"><i data-lucide="x" style="width:28px;height:28px;"></i></button>
+   </div>
+   <nav class="flex flex-col gap-6 text-lg"><a href="#" onclick="closeMobile();navigate('home')">Beranda</a> <a href="#" onclick="closeMobile();navigate('shop')">Shop</a> <a href="#" onclick="closeMobile();navigate('nokepedia')">Nokepedia</a> <a href="#" onclick="closeMobile();navigate('about')">About Us</a> <a href="#" onclick="closeMobile();navigate('orders')">Pesanan Saya</a> <a href="#" onclick="closeMobile();navigate('account')">Akun Saya</a>
+   </nav>
+  </div>
+  <div id="image-pool" class="img-pool"><img data-template-id="hero-img-1" class="canva-image" loading="lazy" src="https://papuabaratprov.go.id/uploads/files/image/LFv--5o3w54grwI1UMVyNvTIa-1XlHfh.jpg" alt="A collection of handcrafted jute bags hanging in a market"> <img data-template-id="hero-img-2" class="canva-image" loading="lazy" src="https://bem.esaunggul.ac.id/gambar-1-noken.jpg" alt="Young woman skillfully weaves traditional crafts"> <img data-template-id="hero-img-3" class="canva-image" loading="lazy" src="https://www.katolikana.com/wp-content/uploads/2024/12/Noken-Papua.jpg" alt="Vibrant collection of handmade handbags on display"> <img data-template-id="category-bg-img" class="canva-image" loading="lazy" src="canva://MAHD0nTlI9o/1" alt="Close-up of a textured brown woven fabric displaying a geometric pattern"> <img data-template-id="banner-ethical-img" class="canva-image" loading="lazy" src="https://images.pexels.com/photos/37848172/pexels-photo-37848172.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Close-up of hands weaving traditional fabric using natural fibers"> <img data-template-id="banner-collection-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/736x/ca/d9/24/cad9247d15b566cffb3a71ec8976c48a.jpg" alt="Vibrant handmade woven bags showcasing traditional craftsmanship"> <img data-template-id="banner-introduction-img" class="canva-image" loading="lazy" src="https://bem.esaunggul.ac.id/thumbail-noken.jpg" alt="A young woman skillfully weaves traditional crafts"> <img data-template-id="about-hero-img" class="canva-image" loading="lazy" src="https://images.pexels.com/photos/25489685/pexels-photo-25489685.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1920" alt="Vibrant collection of handmade handbags on display at a market"> <img data-template-id="cta-bg-img" class="canva-image" loading="lazy" src="https://images.pexels.com/photos/37848173/pexels-photo-37848173.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1920" alt="Close-up of traditional weaving process showcasing cultural craftsmanship"> <img data-template-id="product-1-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/1200x/de/7e/1d/de7e1d4e6ebd7c50a3bd17976a2f6985.jpg" alt="Crocheted baskets for tissue case"> <img data-template-id="product-2-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/736x/ca/d9/24/cad9247d15b566cffb3a71ec8976c48a.jpg" alt="Woman wearing vibrant embroidered dress"> <img data-template-id="product-3-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/236x/f2/99/06/f2990602c3ebe777a3680a5edebb9ae9.jpg" alt="Hands holding tea with crochet coasters"> <img data-template-id="product-4-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/236x/05/ce/4a/05ce4a0f45c66b0ab1e3f8902fa30b21.jpg" alt="Beige and white crochet bags hanging"> <img data-template-id="product-5-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/736x/e0/23/08/e02308a314fb70b7358db44fe3d93947.jpg" alt="Young woman in stylish crochet cardigan"> <img data-template-id="product-6-img" class="canva-image" loading="lazy" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRu0nnQnWWoxbqHo-eGWQmGJUEaEJTsiJQ0Q2n_H8zdEqxMscKi" alt="Young woman wearing colorful bandana"> <img data-template-id="product-7-img" class="canva-image" loading="lazy" src="https://i.etsystatic.com/63043543/r/il/ba9a85/7651398523/il_1588xN.7651398523_2has.jpg" alt="Crochet daisy bookmark on open book"> <img data-template-id="product-8-img" class="canva-image" loading="lazy" src="https://preview.redd.it/some-of-my-recent-crochet-projects-v0-cnldiezgem9h1.jpg?width=640&crop=smart&auto=webp&s=2541f76762291f4b1125c777a712fc635a14a099" alt="Delicate bridal hair accessory"> <img data-template-id="product-9-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/736x/1f/8f/98/1f8f986f54da354bd7450db2e75f6d48.jpg" alt="Woven baskets with tassels hanging on wall"> <img data-template-id="product-10-img" class="canva-image" loading="lazy" src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQyzPEm41bMwR6_UNTk_xb-xIpdC28XfNgb00wLTIWH9jPbxdxk" alt="Woven rattan mat texture"> <img data-template-id="product-11-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/236x/f6/ca/6c/f6ca6ca5237e1bfd0ae099fabe815952.jpg" alt="Handcrafted crochet tote bag with sunflower"> <img data-template-id="product-12-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/736x/85/08/e2/8508e2b11ef3d3bffc3e2d93906f7f56.jpg" alt="White canvas drawstring pouch"> <img data-template-id="product-13-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/236x/93/54/9a/93549a9456fdf7c246804bd935c5cdae.jpg" alt="Crocheted wallet with smiley face button"> <img data-template-id="product-14-img" class="canva-image" loading="lazy" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxISEhAQEBAQEBUVEBAQFhAQFQ8QEhEVFhUWFhUWFhUYHSggGBolGxUWITEhKCkrLi4uFx8zODMsNygtLisBCgoKDg0OFRAPFS0dHR0tLSstKy0rKy0rLS0rKy0tLS0tLS0tKzctKy0rKysrLS0tNy0rNy03KzctNy0rNysrK//AABEIAQUAwQMBIgACEQEDEQH/xAAcAAACAwEBAQEAAAAAAAAAAAAAAQIEBQMGBwj/xAA7EAABBAAEBAQEAwYGAwEAAAABAAIDEQQSITEFQVFhBhMicTKBkaFiscEjQlLR4fAHFDNysvGCksIk/8QAGQEBAQEBAQEAAAAAAAAAAAAAAAECAwQF/8QAIhEBAQACAwACAgMBAAAAAAAAAAECEQMhMRJBBFETMmEU/9oADAMBAAIRAxEAPwD6RC5xcyh5jqBMhIDBetjr/VayxsPLfpiprW6WQduWQbH3WphWgDdx6lxJ/NYaTcF5vxJhiwtxUYsx/G0bvju3D3G4XpXFVsSLBHZSzayvCf4g8ZEfD5HMOs2SFpHST4j/AOocvj5w1bfT+XVeu/xKe6LJhXA+WJnTsPIAtLXM/wDHMSOx7Ly7HWNelEb6g0fyWK9XFOnFgGt3e2n9eXuukbSdiTXMaOH99kiPt76e3P8ANSjA9tVHV1yjnX30PXTY+30U/LJ1Aa49HaO9w4fEEAnS/rQN/wA/uiyHANItx1adgBv/AHuinFiX55KJysFUCdXEgDf3WgMSRuA7lWx9/wAlRwbA+yLp8uck7hrAPr6q+islhJcT0ytd+60H+wo1Gz4c4m1kscgzfs3guYdXAAkH3FL7Dh5mva17Dma4BwI5hfBhhj6fLDvS1rQ4AjnqT1AFmuZK+0+GWkYWAOFHywa23JIXTj9eb8qdStNMITpdXiJNFJoGhCaoVJFqkgoOZUaXQhRIU0IUhSpCg4h1A1yF0rLJDoDpsVn4UeiQ9QPu5arxuK/sUFybSaVIssfquEGwPYlWmclZR4X/ABE8Of5iEkC3Nuj+X8vmviuBsWx2jgS0g6G26V7r9SSxAggjQhfDf8TPDZgm/wAzGDlefXXIjZyZR24s+9PKyCt9uw3XMEdNuY/qrMcttG3cKE50NjlWl89L+65vYlH+BwPpsNOh376Eb7qtA4lrpK1PoA7uOv6KWPjoCtzG2MD31v8ANdsEBYP7sfpbzzv2JQ9ul5jfLa0AA2KINmxzrpqfsrUY0BadO5BIPQ9fYqEVEn1A0Nd6bW+u3NDMUxxJY9h5EAWO4caFqN+NXguD82aJouzIzT1dbPsK5L7AOy8h4F4WAwYhzac7MGAXQbtYvmTfyXrwu3HjqPB+Rn8stT6TCEKLnLo852mFxMwClHMCaBF9OaI6poCFQIQhAJEJoQRpNOkIKeEZ6G9zH+ZKvPNBp6glVYD6Gf7m/ZpVufYdmf8AyVwbLCi2j2H5ld4tm+wK54ZtAD8DVZDKA9ggAD7rC8S8ME8L2EXoavqvQgFcZ41onT89cQ4K5l5Wn07tHxV+H26LO8sAE53OaRVmvT8uVEL7BxjhIEhIGh1XkeKeBGSFzmOcwu3ZZDHfTZYuL08fL9V4YNdITQ1oNaf4RZBefkaCuYeG6DG2yLQDYvf+tfqvWYbwO8NrM1v4W5v+XVaWE8Gv0GeONu3oDnGhsBdAKart/LhPt4TFzPIyjV3JrNQO5r9VveDPA0ry2Se2svMbFOeew3XvuF+GMPDRETXO3zO1N9a2W61lLpjh+3Dk/I3/AFKCINaGtFAAAAcgNl1akmSujyhzlm8Q4gIwSTSsYqWgvBeIeKMMrI5LLHPawgXVEgG+1LOV01jjscY4/M5rJYn1F5jmPLG5yGt+I3dDp7lUOIY0NxDMYC6WN0RynLkdh6GlZiQ4+++q2/DXAzHHrO2SG3lsLKdHec1Z51+fsunH8M0xuBAqjos627XKY9QvAPid8wY7E4lrvNe+ONjmtaczKvUdb2XvV8N8LwRCdrcTTg4sjijj9OQvfXmuPIitOa+5gfyWsK58uMnZITQtuRJpJogQhCCtg/haPxv/AOKt4nWx+GvsqmC0b7PJ/v6FWptX6f8Aa4Oi01up/wBoXRv9hQaeo6LoqJBIhJJ7t0GZxDDgkH5KoMMFqz6hVnNW54is2IBSyroQktBAJoCaAUHuUiVWxD6Cm0ZHHcZkY72K8A6UukdDiYnmOYMLCzV7nMkaTXTkD0W74qxvIuDQLJcdgAN1V8Mw4iKTJIwPia6RwxLgbOcB3o7EkX7LnvdejCam3ro2sijbGwZGtFBu9Lx3ibjJc4QxxySlzg0+W0uItWfEnHgwZQ8BxsDmfk3clZXA/DzsU0ugxGIc7zmMfK4NZG0O1kDANSQ2tSeYWrWccfutrwHwEiSSOfCtiyNimcXEPlc8uLowX2aAonKF9IXGCBrAGsFAAN70BQs811VxmmM8vkaEkLW3MIQhAIQhBRxL6aCNQda+/wDVd8JiAQFUy2bBsVW9q5BH2XB0X2P9l0Mmi5RsPNdMtbLSIPkO3zvoFEnZRs2bG4pNJChy4uXRxXMldGUCoqRUCgaaQSc6kEXlZPFMTlaSuruNYcu8sTx5uTc2/tyK8/4qxBArqs2tYzdeUxUsU84glBIfn9V01hDSW2et0rcmNdhohG6Y4h5y0QbaCQBlbyDR1WZhsSydpjxUZY9r2mFgFF4yEZTyAJIcXHoFpcG4E/EjFRyYb9pG0sDzJ8MhHoDQ05QBuXFYj03HrTv4b4fiDisO9skBEhe58kVvc1kZGZge5upJIGnVfR+G4FsDBGy6zPeb19TjZXPgnDRh4IYQG2yMNJF6u3cbPe1fW5HDPPfUCEIWnMBNJCiGhJCbDQkhXYwIGub8JI+4V+LGy8yHe4/kotjXZjVNLtYixrv4PuV2GJJ5V87VYKQKuh3Dk8y45kZ0HQlRJUC5K0DJSRaiSipLH8VyluGlLf4QNN6JAP2K1SVheLZP/wA8gHT9QpfCMriuGjfg/gbpC1w6ggAijyWPNOZY4Gk27KB9NP0CwZvGLsvkZCW5cnpq6+HXotnw+GiWHzTk8y/LunA1VixouWVd8Me29B4Xc84R8jWy5ZXyPkNNdWpYCNnNtx0/C1eu4dwyODOYwcz3F73uJc57jzPIew0VyKINaB2TpaxjPJnfCQmktuJIQhUCSaSgEIQgE1FNFUmqYSpMLTKVotQJSJUV0zJF64lyg56CxnR5ipGdR/zA6qbXTQzpZlTieXfCCfZWmYd52r69FNhPkCwPEmLyxPIo6Vr30WhjXOZeYEd9x9QsLF8MnxYIiytGvqfdfQbqWrI+fRQQv83M7LIbEbTbW5hq3MBvZten4NLIDhmTQRztLxC2TIR5bC5rdTsbDtB7rc4d4DiFSPAMjA1xzUQ6jqS3uvQ4aCFjg4OLg54fZstD6porYAAmhXNZdpnptbfSkkb6oXTTjQhCEQkqUkijJFJSSpVSSTSQCEIQV0k0lURcVzcVJy5OKioucq00inK5Z+KlWbWoUs6jAS9waP12WfNLqtjwqzM9xP4QO+t7rlL23ZqPTYLDhrRmFc+mndSm1aR053WysS68vlva5wEkmxV9dfelphwxj6aA0B1iqIOU6WdeqMPGI2hjRQyX0Fnv2XHEPy/tDZEbCaHPXXT2Cm2UPj8xuvp6X3BN9isqg+cBjndabz1roVjcQbka0N1dYNdCfzV2V+XKOTGB12d9wD87+q44N5c7M9uwdlvZuxHvuitLh+KDhl0BDRoL35q4QsfgcZa+UuB1IAHzW0V1xYqCSZQtISEFAQCSklSCNJKaVIiKFKkIKiiVOlAqiDlXkK7PKqzOUqxWnesvFSK3i5Vj4iZcsq6Yxze5e48IBogaQNS5x+YNaLzvhnhfnSBz2lzQduRrr2XtTGG01jMo7U0DvQUkXK/TsH9wfsuUkgbrrW+239ES5gNN7G+t7c1ykN3pSu2GLxHjMUFmc+l1xgtGZxLrIpvta78IxbDEwZxrbKOjnFrdW5Treh05LD8UyYaTDTAEGQDzA18c+UPZrT/RTbot1rdUeETMiw0bos0rnND3T0ZX04ZngA6jYitzlCmnaTeL0ONkutyTTiBrp+6P6KXD5bqR5/e8sN5t9Jo996WPg8c6RpncC1jrLWZRnk7k5thQ5DdX8E4/CG60aDQMwJ2JPJRmzTUwukzpHu5Noc7P/S2FhH91+jdNOerRqfqr/DMe2UuaOXVbxrnYuEIAUkiujCJCQCaFQIQhAJUpUikEaSU6QgolQK6kLmQqK8iozlX5Vn4hYrUZWLduseZ2q1Ma6lizOs0FxydsY+jeESBBGG1mMYcempPPqtItdqXPA1do37V8l5nwTig1j2HTKbHcOPXsV6ieKqcSCbaNdhrp81ueOeU1SOo0v/c4/kOao4p9Me8vyNDSS80XAVyB0+qs4hxG+50A5NHsuAZma0WKLgT3A2H5fRTSR4vieGxEgBnlkkDgcsTGZdXCml9b1YJ5LPwPAns/zJgkeKJqCyBJGbjOQtNhxe2TvoCvoeMjaC0gXlLefIgrFii8iV5BDoZNboAscXWR7WSb6o7TPpgeGcA1kbnNfJ6XljmuDy0+lpr1DRwdeo1qrWzBJTvSS3UbA3vzXXH4iyS03qDpsf6qtGaNk1vv7brKW7XZHAtAJJ0IA7k/2UuGYjLIAKvOGnuDoubpgByOzvtoFe8PYYl/mObVAmz1PZWesV6BwokKBUkivQ5IpUpIUQgE0IQCaEKgQmhBRXNy6JEIqvIFm4sLVeFnY5uizVjzPE5FW4Vhg85jqBqdLNc6HuQnxY6r0PAMLliDiBrRs6aVe/uuGT2cUZkb/KlbIGkAFt61mH8JbyX0HDTMkAe2njQ77Edl5KVo1J1/FpeuwtedhnLpn4iJ3oiLomFpq3j/AFCRdEXp/wCKmN01y8fzvT3+KzPcWg6/CAao8yXdFebA0VpoKArqdCvn03iWXzIs2UAb5Qb6W43qCvfQyh+RzT6Q3NW511Fhbl282eFx9csSN71vM2v9uy8/iHOFj4mnWuvUe9rcc62Zhr6yRrm01tVxgrtpBBOooajp6jslZl0xWgAGhbbpwA+EitQUoi55a1morW+vMlaIw4sFrfhcGODud6U0cz3XaeNzJJGxOoDXIKFaAEF3S1muuGPyuo4YbhdSXIdBrZr5UOa9K0ACh/2vLzRu+MOLjyN5I2/iJO47LZ4fj2uppPqr2zdHAcgVrCza8nBZN+r6SZSXd5QhCEQIQhAIQhAUhNCCihNJFRe1UsZHor65zMsKK8FxuOtV6XhEueBvxaD4RoXaD7dln8ewdgld+FzNhwjpCdGep1DUaa+50XCzt6+LJU4y8tqJhcZJS5jCzIHsGmZ7hyDQa7mlVxsbIY2xsqqygjc8rvrf5qzwpuYvxkgIdLlDQ4Na6GM6Rgde/crlicK7ESCry2M3zOVwHXZSu8/dY2AwDpnC7pp+L70ey9zwQ0SwuIGQtBO9Db5rlhsA2NgYANhZCGNGuq1jhY8/NnMumzHFTcm9WCNTuuOIYcgAuwaDvUNtRSx5+IyxYnCxRuB8xsrn59f2bA2q6G1cxXFJQ8PIYavSjWoWrHHVX4mtYx80n8QdWxdVVfzXm5TKHyTxn/UsnDvvK916kc2nl0PRaUuLdLlD6Ja1tRiwCXO0f7D9FXfGXPAbZ+Ih/wA6Lz8qAXO16+Pj+M/12wePbMMuWnWAY5AQ++foGw77LljXGJwlsk6nKOug1rkAu2Jwod6oneW9oFO5ZdSGP6g/ZQhk85rmvbke22ujsjKdvTzIOvqUblejwkuZjXdua6qpwn/SZ2Fczsra9GPj5/LNZUISTWnMIQhAJoTQJNJNBRSTBQimAk4JhSCgzMdgi8UFybwr9iY9DmsOBundPktmkiFLjK3jncfGHHwVoDc7nOyg+k3Wpuq6K5TWigAOXLZd5lmY2cNBJKmpGrnlk5Y3HBoNrzHE/FQgBkLHP1oNaQLO/wAhoq/E+IF5OuiqYrw6MUxrs5jIOVtAkE6Gj1/RYuTtjx9dtbwHxZ+Mxc80zQ13kZYmt1YxgcLF72bv6r3E+FvksPwJ4WkwhlfLl1YyNpYbDgNS7tyH1XrC1bxm3LkusumGMFRB106b9/zXTC4dwvb1BgPSm8q7grXyBGVLxwx5rizcFhS0NBINOLrdeoO19TyUcfBoXimyBrg1zQS7U2RZ3HZawCkGqfxtf9F/SGAjyxsB6X9V2StC3JqacMst3YTSTVZCAhAQNCAmgSEfNNBnhSUFIKKYUwoBTCCSiU0igrzDReP8STG8uta6Dc9l7KVqwOL4Av235FYzdOOzfbx+BwnmvPQbkdaND++5XvOE8NAAcdqGUDbYWQOh2WZ4f4EcznPNAUPLA0dz1XsYYq3rS6A2XPGPVlnJHaqAC5kKZKiu8eK3aNIpSSVQAJhJMIBCaEQk0IQCEIUUWmoqQVAmhCDOCkEqUgoBTCgphBJFICagiWpeUOi6IVAwVtoulqAUginaRQhEAQhNAJpJqxAhCEAhCEAhCSihMJBSQNCEIKCYSCkoBMJKSCQTUQpIpoSTCqGmFFSBQNNIJoBIJoQCaEIgQhCoEJoQJBTSRSCklSaAQmhEUQmEIWVNNCEDTCEIphCEIhpoQgYTQhA0IQqGhCEQIQhUNCEIBCEIBNCEAhCEH//Z" alt="Colorful handmade keychain with beads"> <img data-template-id="product-15-img" class="canva-image" loading="lazy" src="https://i.pinimg.com/736x/c5/e8/e3/c5e8e3db46499820470ec3ed2522644a.jpg"> <img data-template-id="article-1-img" class="canva-image" loading="lazy" src="https://kab-yahukimo.kpu.go.id/public/kab-yahukimo/images/1761395597_7e69dbc62502a15b1ed5.png" alt="Market in Agats Papua showcasing traditional woven crafts"> <img data-template-id="article-2-img" class="canva-image" loading="lazy" src="https://papuabaratprov.go.id/uploads/files/image/LFv--5o3w54grwI1UMVyNvTIa-1XlHfh.jpg" alt="Vibrant cultural parade featuring traditional Papua costumes"> <img data-template-id="article-3-img" class="canva-image" loading="lazy" src="https://img.antaranews.com/cache/1200x800/2026/06/28/IMG_20260624_125436.jpg.webp" alt="Young woman skillfully weaves traditional crafts"> <img data-template-id="article-4-img" class="canva-image" loading="lazy" src="https://images.pexels.com/photos/28528429/pexels-photo-28528429.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Lively outdoor market in Agats Papua Indonesia"> <img data-template-id="team-1-img" class="canva-image" loading="lazy" src="assets/Cindy.jpg" alt="Cindy Hizkiandy W."> <img data-template-id="team-2-img" class="canva-image" loading="lazy" src="assets/Najwa.jpg" alt="Najwa Nabilah"> <img data-template-id="team-3-img" class="canva-image" loading="lazy" src="assets/van.jpg" alt="Devina Vanesha K."> <img data-template-id="team-4-img" class="canva-image" loading="lazy" src="assets/jane.jpg" alt="Jane Tan"> <img data-template-id="team-5-img" class="canva-image" loading="lazy" src="assets/van.jpg" alt="Stevannus Fakkar">
+  </div>
+  <header class="sticky top-0 z-50 bg-[#3d2814] text-white shadow-lg">
+   <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+    <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')"><img data-template-id="header-logo" class="canva-image h-10 w-auto object-contain" loading="lazy" src="assets/Logo.png" alt="NOKEA brand logo">
+    </div>
+    <nav class="hidden md:flex items-center gap-6 text-sm font-medium"><a href="#" onclick="event.preventDefault();navigate('home')" class="nav-link" id="nav-home">Beranda</a> <a href="#" onclick="event.preventDefault();navigate('shop')" class="nav-link" id="nav-shop">Shop</a> <a href="#" onclick="event.preventDefault();navigate('nokepedia')" class="nav-link" id="nav-nokepedia">Nokepedia</a> <a href="#" onclick="event.preventDefault();navigate('about')" class="nav-link" id="nav-about">About Us</a> <a href="#" onclick="event.preventDefault();navigate('orders')" class="nav-link" id="nav-orders">Pesanan Saya</a>
+    </nav>
+    <div class="flex items-center gap-4"><button onclick="openSearch()" aria-label="Search"><i data-lucide="search" style="width:22px;height:22px;"></i></button> <button onclick="navigate('cart')" class="relative" aria-label="Cart"><i data-lucide="shopping-bag" style="width:22px;height:22px;"></i><span id="cart-badge" class="absolute -top-2 -right-2 bg-[#c77b2e] text-white text-xs w-5 h-5 rounded-full flex items-center justify-center hidden">0</span></button>
+     <div class="relative" id="profile-menu-container"><button onclick="toggleProfileMenu()" class="p-1 hover:text-[#c77b2e] transition" aria-label="Profile"><i data-lucide="user-circle" style="width:24px;height:24px;"></i></button>
+      <div id="profile-dropdown" class="absolute right-0 mt-2 bg-white text-gray-800 rounded-lg shadow-lg w-40 hidden z-50"><a href="#" onclick="event.preventDefault();toggleProfileMenu();navigate('account')" class="block px-4 py-3 text-sm hover:bg-gray-100 rounded-t-lg">Akun Saya</a> <a href="#" onclick="event.preventDefault();toggleProfileMenu();logout()" class="block px-4 py-3 text-sm hover:bg-gray-100 rounded-b-lg border-t">Logout</a>
+      </div>
+     </div><button class="md:hidden" onclick="openMobile()"><i data-lucide="menu" style="width:24px;height:24px;"></i></button>
+    </div>
+   </div>
+   <div class="bg-[#3d2814] border-t border-white/20 py-2 text-center">
+    <p class="font-display italic text-xs md:text-sm text-[#c77b2e]">We Have Taken a Big Leap by Combining Our Main Process and Products</p>
+   </div>
+  </header>
+  <main id="app" class="w-full"></main>
+  <footer data-template-id="footer-section" class="canva-footer bg-[#3d2814] text-white mt-0" style="background: rgb(61, 40, 20);">
+   <div class="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-8">
+    <div><img data-template-id="footer-logo" class="canva-image h-12 w-auto object-contain mb-3" loading="lazy" src="assets/Logo.png" alt="NOKEA brand logo">
+     <p data-template-id="footer-tagline" class="canva-text text-sm opacity-70 mt-2" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Warisan budaya dalam genggaman Anda.</p>
+     <p data-template-id="footer-address-label" class="canva-text font-bold text-sm mt-4" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">OFFICE ADDRESS</p>
+     <p data-template-id="footer-address" class="canva-text text-sm opacity-70 mt-1" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">Jl. Letjen S. Parman, RT.12/RW.6, Tj. Duren Sel., Kec. Grogol petamburan, Kota Adm, Daerah Khusus Ibukota Jakarta 11470</p>
+    </div>
+    <div class="md:text-right">
+     <p data-template-id="footer-email" class="canva-text text-sm" style="color: rgb(199, 123, 46); font-weight: 400; font-style: normal; font-size: 16px;">nokea.id@gmail.com</p>
+     <p data-template-id="footer-phone-label" class="canva-text font-bold text-sm mt-4" style="color: rgb(255, 255, 255); font-weight: 700; font-style: normal; font-size: 16px;">PHONE NUMBER</p>
+     <p data-template-id="footer-phone" class="canva-text text-sm opacity-70 mt-1" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">(123) 456 7890</p>
+    </div>
+   </div>
+   <div class="border-t border-white/20 py-4 text-center">
+    <p data-template-id="footer-copyright" class="canva-text text-xs opacity-60" style="color: rgb(255, 255, 255); font-weight: 400; font-style: normal; font-size: 16px;">© 2026 NOKEA, All Rights Reserved.</p>
+   </div>
+  </footer>
+  <script src="/_sdk/c94a279e896d0a23.editing_sdk.js" integrity="sha512-uhzUP50YzTVKO+Zk7rEhhvjMMNFy592eHXVEXciJzhLpIQxrlwzWv/DQvyYWQ+AKpYwxxCvjgWkVa5LTga2NWg=="></script>
+  <script>
+const products = [
+  {id:1,name:'Tissue Case',price:79000,oldPrice:99000,category:'Home Decor',imgId:'product-1-img',stars:4,colors:['#f5e6d3','#c77b2e','#3d2814','#8b5e3c']},
+  {id:2,name:'Aruna Waist Belt',price:99000,oldPrice:120000,category:'Apparel',imgId:'product-2-img',stars:5,colors:['#d4a574','#e8b4a0','#3d5c6b','#c77b2e','#8b4513']},
+  {id:3,name:'Cup Holder',price:39000,oldPrice:59000,category:'Straps',imgId:'product-3-img',stars:3,colors:['#2c3e50','#c77b2e','#f5e6d3']},
+  {id:4,name:'Reka Shoulder Bag',price:139000,oldPrice:169000,category:'Bags & Pouch',imgId:'product-4-img',stars:5,colors:['#f5e6d3','#c77b2e','#8b5e3c','#3d2814']},
+  {id:5,name:'Kira Outerwear',price:229000,oldPrice:289000,category:'Apparel',imgId:'product-5-img',stars:4,colors:['#ffffff','#f5e6d3','#c77b2e']},
+  {id:6,name:'Lestari Bandana',price:89000,oldPrice:109000,category:'Accessories',imgId:'product-6-img',stars:4,colors:['#c77b2e','#e74c3c','#2c3e50','#27ae60']},
+  {id:7,name:'Lily Hair Tie',price:39000,oldPrice:49000,category:'Accessories',imgId:'product-7-img',stars:3,colors:['#f1c40f','#ffffff','#e8b4a0']},
+  {id:8,name:'Harmoni Hair Pin',price:29000,oldPrice:39000,category:'Accessories',imgId:'product-8-img',stars:5,colors:['#ffffff','#f5e6d3','#c77b2e']},
+  {id:9,name:'Hanging Organizer',price:89000,oldPrice:119000,category:'Home Decor',imgId:'product-9-img',stars:4,colors:['#f5e6d3','#c77b2e','#8b5e3c']},
+  {id:10,name:'Desk Mat',price:109000,oldPrice:139000,category:'Home Decor',imgId:'product-10-img',stars:3,colors:['#8b5e3c','#c77b2e','#3d2814']},
+  {id:11,name:'Asa Tote Bag',price:149000,oldPrice:179000,category:'Bags & Pouch',imgId:'product-11-img',stars:5,colors:['#f5e6d3','#c77b2e','#e74c3c','#2c3e50']},
+  {id:12,name:'Drawstring Pouch',price:59000,oldPrice:79000,category:'Bags & Pouch',imgId:'product-12-img',stars:4,colors:['#ffffff','#f5e6d3','#c77b2e']},
+  {id:13,name:'Mini Wallet',price:49000,oldPrice:79000,category:'Bags & Pouch',imgId:'product-13-img',stars:3,colors:['#2c3e50','#ffffff','#c77b2e']},
+  {id:14,name:'Bag Charm',price:29000,oldPrice:49000,category:'Straps',imgId:'product-14-img',stars:4,colors:['#c77b2e','#e74c3c','#27ae60','#f1c40f']},
+  {id:15,name:'Lanyard Strap',price:49000,oldPrice:79000,category:'Straps',imgId:'product-15-img',stars:5,colors:['#c77b2e','#2c3e50','#e74c3c','#27ae60']},
+];
+
+const articles = [
+  {id:1,title:'Noken, Warisan Budaya Papua yang Diakui UNESCO',date:'Sabtu, 25 Oktober 2025',views:100,imgId:'article-1-img',desc:
+  'Yahukimo - Noken merupakan tas tradisional khas Papua yang memiliki makna mendalam bagi kehidupan masyarakat di Tanah Papua, termasuk...',
+  content:`
+  <p>Yahukimo - Noken merupakan tas tradisional khas Papua yang memiliki makna mendalam bagi kehidupan masyarakat di Tanah Papua, termasuk di Kabupaten Yahukimo. Terbuat dari serat alami seperti kulit kayu atau tali yang dipilin dengan tangan, noken bukan sekadar alat untuk membawa barang, tetapi juga simbol kehidupan, kerja keras, dan kasih sayang. Dalam keseharian, perempuan Papua memikul noken di kepala sebagai tanda tanggung jawab dan keteguhan dalam menjalani hidup.</p>
+  <p class="mt-3">Keunikan noken terletak pada proses pembuatannya yang seluruhnya dilakukan secara manual. Para perempuan Yahukimo biasanya mengambil kulit pohon tertentu, kemudian mengolahnya hingga menjadi benang alami. Dari benang inilah mereka merajut noken dengan berbagai ukuran dan motif. Setiap anyaman memiliki makna tersendiri—mulai dari simbol kedewasaan, kebersamaan, hingga penghormatan terhadap alam. Proses ini mengajarkan kesabaran dan nilai-nilai tradisional yang diwariskan turun-temurun.</p>
+  <p class="mt-3">Pengakuan dunia terhadap noken sebagai warisan budaya takbenda datang pada tahun 2012, ketika UNESCO menetapkan Noken Papua sebagai Warisan Budaya Takbenda Dunia yang Memerlukan Perlindungan Mendesak.</p>
+  <p class="mt-3 font-bold">Apa Itu Warisan Budaya Tak benda ?</p>
+  <p class="mt-3">1. Noken Sebagai Warisan Budaya Takbenda, karena :</p>
+  <p class="mt-3">- Pembuatan noken melibatkan pengetahuan tradisional tentang alam, seperti cara mengolah kulit kayu menjadi serat.</p>
+  <p>- Proses merajut noken diajarkan dari ibu ke anak perempuan secara turun-temurun.</p>
+  <p>- Noken memiliki makna sosial dan spiritual — melambangkan tanggung jawab, kasih sayang, dan perdamaian.</p>
+  <p>- Noken digunakan dalam berbagai ritual adat, misalnya sebagai hadiah simbolik atau alat membawa hasil panen dan bayi.</p>
+  <p class="mt-3">2. Pengakuan UNESCO</p>
+  <p class="mt-3">Pada tahun 2012, UNESCO menetapkan Noken Papua sebagai Warisan Budaya Takbenda Dunia yang Memerlukan Perlindungan Mendesak. Artinya, dunia mengakui bahwa noken bukan hanya benda khas Papua, tapi juga simbol kebudayaan manusia yang perlu dijaga agar tidak punah.</p>
+  <p class="mt-3>3. Makna bagi Masyarakat Papua</p>
+  <p>Bagi masyarakat di Yahukimo dan daerah lain di Papua, noken adalah bagian dari jati diri perempuan Papua. Ia menjadi simbol kerja keras, cinta, dan tanggung jawab terhadap keluarga dan alam.</p>
+  <p class="mt-3 font-bold">Kegunaan Noken dalam Kehidupan Sosial Masyarakat</p>
+  <p>Dalam kehidupan sosial masyarakat Yahukimo, noken memiliki peran yang luas. Ia digunakan untuk membawa hasil kebun, menyimpan hasil hutan, bahkan menggendong bayi. Lebih dari itu, noken juga berfungsi sebagai simbol perdamaian dan kasih sayang. Dalam beberapa upacara adat, noken diberikan sebagai tanda penghormatan atau sebagai simbol penyelesaian konflik antarwarga</p>
+  <p class="mt-3 font-bold">Tantangan Kelestarian Noken</p>
+  <p class="mt-3">Kini, tantangan terbesar bagi kelestarian noken adalah masuknya bahan dan produk modern yang mulai menggeser peran tradisionalnya. Namun, upaya pelestarian terus dilakukan melalui pelatihan, pameran budaya, dan kegiatan edukatif di sekolah-sekolah. Perempuan Yahukimo pun tetap menjadi garda terdepan dalam menjaga tradisi ini agar tidak punah di tengah arus modernisasi.</p>
+  <p class="mt-3">Melestarikan noken berarti melestarikan jati diri dan kearifan lokal Papua. Melalui tangan-tangan terampil para perempuan di Yahukimo, warisan ini terus hidup dan menjadi simbol kebanggaan, ketulusan, serta keindahan budaya Papua yang diakui dunia.</p>
+  `},
+  {id:2,title:'Noken Merupakan Warisan Dunia Patut di Lestarikan',date:'Minggu, 12 November 2025',views:85,imgId:'article-2-img',desc:'Noken merupakan warisan dunia telah di tetapkan UNESCO 4 Desember 2012, sehingga noken membuat generasi papua sebagai pewaris noken sejak turun temurun patut dibanggakan...',
+  content:`
+  <p class="mt-3">Noken merupakan warisan dunia telah di tetapkan UNESCO 4 Desember 2012, sehingga noken membuat generasi papua sebagai pewaris noken sejak turun temurun patut dibanggakan.</p>
+  <p class="mt-3">Ketua noken malanesia komuniti (MNC), Hugo Asrouw, mengatakan, Kebanggan itu tidak mendasar jika saat ini, generasi muda Papua tidak merasa bangga memiliki Noken.</p>
+  <p class="mt-3">Ketua noken malanesia komuniti (MNC), Hugo Asrouw, mengatakan, Kebanggan itu tidak mendasar jika saat ini, generasi muda Papua tidak merasa bangga memiliki Noken.</p>
+  <p class="mt-3">Generasi mudah saat ini, minder atau kurang percaya diri jika menggunakan noken sebagai Style atau gaya Hidup.</p>
+  <p class="mt-3">kebanggaan sebagai pemilik noken, kalau mencintai Noken sebagai warisan leluhur hari ini, sedang bergtembira</p>
+  <p class="mt-3">Selain itu menurutnya, noken tak lagi menjadi warisan perempuan Papua, kaum lelaki pun bis menggunakannya, sedangkan noken tak lagi dikerjakan kaum perempuan muda, justru di tekuni mama papua atau perempuan papua yang sudsah usur.</p>
+  <p class="mt-3">Sementara bahan dasar dari noken sendiri terancam punah, dimana bahan dasarnya berasal dari pohon Agrek, sedangka pohon agrek sendiri terancam punah.</p>
+  <p class="mt-3">Menurutnya pemerintah daerah melalui pengarajin noken, menyediakan pasaran noken tradisional, untuk di perjualkan serta memasrkan noke ke tia wisata maupaun tamun kehormatan, terangnya</p>
+  <p class="mt-3 font-bold">(Sumber:arfaknews.com)</p>`},
+  {id:3,title:'Pemkab promosikan noken cenderawasih karya UMKM Suku Bomta Jayawijaya',date:'Rabu, 7 Juli 2025',views:120,imgId:'article-3-img',desc:'Wamena (ANTARA) - Pemerintah Kabupaten (Pemkab) Jayawijaya, Papua Pegunungan,mempromosikan noken cenderawasih...',content:`
+  <p class="mt-3">Wamena (ANTARA) - Pemerintah Kabupaten (Pemkab) Jayawijaya, Papua Pegunungan, mempromosikan noken cenderawasih yang sangat unik produk usaha mikro kecil dan menengah (UMKM) kerajinan tangan di 328 kampung dari Suku Bomta sebagai upaya meningkatkan pendapatan ekonomi masyarakat.</p>
+  <p class="mt-3">Bupati Jayawijaya Atenius Murib dalam keterangan tertulis di Wamena, Minggu, mengatakan salah satu upaya meningkatkan performa UMKM di wilayahnya adalah dengan membuat pameran mini masyarakat yang memamerkan berbagai kerajinan tangan masyarakat yang tergabung dalam kelompok binaan PKK dan Dekranasda.</p>
+  <p class="mt-3">“Kami menggelar pemaren mini di Kampung Taganek, Distrik Yalengga dengan menghadirkan hasil kerajinan tangan masyarakat di wilayah tersebut supaya hasil kerajinan mereka dibeli oleh pengunjung yang hadir di sana,” katanya.</p>
+  <p class="mt-3">Pihaknya juga mendorong salah satu kerajinan tangan masyarakat di wilayah Yalengga adalah Noken Cenderawasih untuk memperoleh legalitas hukum oleh negara.</p>
+  <p class="mt-3">“Pemerintah daerah bekerja sama dengan PKK dan Dekranasda mendorong Noken Cenderawasih untuk mendapatkan hak atas kekayaan intelektual atau Haki. Supaya mereka lebih percaya diri dan produknya berdaya saing, sehingga ke depan produk UMKM Noken Cenderawasih semakin luas pasarnya baik di pasar nasional maupun internasional,” ujarnya.</p>
+  <p class="mt-3">Dia menjelaskan noken atau tas asli masyarakat Papua memang telah diakui sebagai warisan budaya tak benda oleh Unesco, tetapi dalam rajutan noken secara budaya berbeda-beda antara suku satu dan lainnya di Papua.</p>
+  <p class="mt-3">“Untuk itu kami mendorong hasil kerajinan tangan Noken Cenderawasih dari masyarakat adat wilayah Bomta memperoleh Haki, supaya dalam pemasaran ke depan terlindungi hak ciptanya terutama untuk noken yang dibuat oleh suku Bomta,” katanya.</p>
+  <p class="mt-3">Dia menambahkan apa yang dilakukan oleh pemerintah daerah bersama PKK dan Dekranasda merupakan upaya dalam mendukung sektor UMKM masyarakat di Jayawijaya.</p>
+  <p class="mt-3">“Kami berharap produk UMKM tidak hanya noken, karena ada juga produk alam seperti kopi, alpukat, markisa, serta hasil perkebunan dan kerajinan asli Jayawijaya bisa menjadi pendorong kemajuan ekonomi bagi masyarakat di daerah ini,” ujarnya.</p>`},
+  {id:4,title:'Festival Cenderawasih Dorong PromosiFestival Cenderawasih 2025: Dorong Ekonomi Papua dengan UMKM, Pariwisata, dan Digitalisasi',date:'Jumat, 17 Mei 2025',views:95,imgId:'article-4-img',desc:'Festival Cenderawasih pertama ini merupakan kolaborasi Bank Indonesia dan Pemerintah Provinsi Papua yang bertujuan mendorong UMKM...',
+  content:`
+  <p class="mt-3">KABARPAPUA.CO, Kota Jayapura - Bank Indonesia Provinsi Papua kembali menggelar Festival Cenderawasih 2025, ajang strategis yang bertujuan mengembangkan UMKM, pariwisata, investasi, dan digitalisasi sebagai pilar utama pertumbuhan ekonomi Papua.Referensi Geografis</p>
+  <p class="mt-3">Acara ini berlangsung selama tiga hari, 13-15 Juni 2025, di Ex Terminal PTC Entrop, Kota Jayapura.Adapun tema “Mendorong Perekonomian Papua yang Berkelanjutan melalui Pengembangan UMKM, Pariwisata, Investasi, dan Digitalisasi”, festival ini menjadi wadah sinergi berbagai sektor ekonomi, termasuk penguatan Ekonomi dan Keuangan Syariah (Eksyar).</p>
+  <p class="mt-3">Kepala Perwakilan Bank Indonesia Provinsi Papua, Faturachman menegaskan, festival ini berperan sebagai katalisator dalam menciptakan iklim investasi yang sehat dan memperkuat sumber pertumbuhan ekonomi baru di Papua.</p>
+  <p class="mt-3">“Perekonomian harus dibangun dengan pendekatan strong, sustainable, balanced, and inclusive growth, atau pertumbuhan yang kuat, berkelanjutan, seimbang, dan inklusif,” ujar Faturachman dalam sesi Bincang-Bincang Media di Hotel Maxone Jayapura, Jumat malam, 16 Mei 2025.</p>
+  <p class="mt-3">Festival ini menghadirkan beragam acara menarik, di antaranya: Showcasing dan Business Matching Menampilkan sekitar 40 UMKM binaan dan mitra, termasuk usaha komunitas difabel di sektor food and beverage, fashion/craft, dan pariwisata.</p>
+  <p class="mt-3">Kompetisi tematik, lomba interaktif tentang ekonomi syariah, investasi, QRIS, dan edukasi Cinta Bangga Paham Rupiah. Talkshow dan edukasi, diskusi mendalam seputar perkembangan ekonomi, pariwisata, sistem pembayaran digital, dan inklusi keuangan. Festival budaya dan musik: menampilkan seni tradisional Papua, kuliner khas, serta musisi lokal dari wilayah timur Indonesia.</p>
+  <p class="mt-3">Tahun ini, Festival Cenderawasih memperkenalkan tiga program unggulan baru, yakni: sustainable tourism exhibition, edukasi dan promosi pariwisata berkelanjutan berbasis alam dan budaya Papua.</p>
+  <p class="mt-3">Terus, syariah dan halal fair, penguatan ekosistem ekonomi syariah dengan halal value chain, serta akses keuangan syariah. Lalu, inclusive economic growth, pertumbuhan ekonomi berbasis kearifan lokal yang memberdayakan komunitas adat, penyandang disabilitas, dan pelaku ekonomi inklusif.</p>
+  <p class="mt-3">Melalui Festival Cenderawasih 2025, diharapkan semakin banyak peluang investasi dan inovasi yang mendorong Papua menuju ekonomi yang lebih adil, berkelanjutan, dan inklusif.</p>
+  <p class="mt-3 font-bold">(Imelda)</p>`},
+];
+
+const teamMembers = [
+  {name:'Cindy Hizkiandy W.',role:'Production - UI Designer',imgId:'team-1-img'},
+  {name:'Najwa Nabilah',role:'CTO - UI Designer',imgId:'team-2-img'},
+  {name:'Devina Vanesha K.',role:'CMO - UX Designer',imgId:'team-3-img'},
+  {name:'Jane Tan',role:'COO - UX Designer',imgId:'team-4-img'},
+  {name:'Stevannus Fakkar',role:'R&D - UX Researcher',imgId:'team-5-img'},
+];
+
+let cart = [];
+let orders = [];
+let currentPage = 'home';
+let currentUser = null;
+let discountCode = '';
+
+function fmt(n) { return 'Rp. ' + n.toLocaleString('id-ID') + ',-'; }
+function getImgSrc(imgId) { const el = document.querySelector(`#image-pool [data-template-id="${imgId}"]`); return el ? (el.src || '') : ''; }
+
+let carouselIndex = 0;
+
+function updateCarousel() {
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dots = document.querySelectorAll('.carousel-dot');
+  if (slides.length === 0) return;
+  carouselIndex = (carouselIndex + slides.length) % slides.length;
+  slides.forEach((s, i) => s.classList.toggle('active', i === carouselIndex));
+  dots.forEach((d, i) => d.classList.toggle('active', i === carouselIndex));
+}
+
+function nextSlide() { carouselIndex++; updateCarousel(); }
+function prevSlide() { carouselIndex--; updateCarousel(); }
+function goToSlide(n) { carouselIndex = n; updateCarousel(); }
+
+function stars(n) { return '★'.repeat(n) + '☆'.repeat(5-n); }
+
+function navigate(page, data) {
+  currentPage = page;
+  window.scrollTo(0, 0);
+  updateNavActive();
+  if (page === 'home') renderHome();
+  else if (page === 'shop') renderShop(data);
+  else if (page === 'cart') renderCart();
+  else if (page === 'detail') renderDetail(data);
+  else if (page === 'nokepedia') renderNokepedia();
+  else if (page === 'article') renderArticle(data);
+  else if (page === 'about') renderAbout();
+  else if (page === 'orders') renderOrders();
+  else if (page === 'account') renderAccount();
+  lucide.createIcons();
+  setupScrollAnimations();
+}
+
+function updateNavActive() {
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  const map = {home:'nav-home',shop:'nav-shop',nokepedia:'nav-nokepedia',about:'nav-about',orders:'nav-orders'};
+  const el = document.getElementById(map[currentPage]);
+  if (el) el.classList.add('active');
+}
+
+function updateCartBadge() {
+  const badge = document.getElementById('cart-badge');
+  const count = cart.reduce((s,i) => s + i.qty, 0);
+  if (count > 0) { badge.textContent = count; badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+}
+
+function addToCart(id, selectedColor) {
+  const p = products.find(x => x.id === id);
+  const existing = cart.find(x => x.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ ...p, qty: 1, size: 'M', selectedColor: selectedColor || p.colors[0] });
+  updateCartBadge();
+  showToast(p.name + ' ditambahkan ke keranjang!');
+}
+
+function showToast(msg) { const t = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
+function openSearch() { document.getElementById('search-overlay').classList.add('active'); document.getElementById('search-input').focus(); }
+function closeSearch() { document.getElementById('search-overlay').classList.remove('active'); document.getElementById('search-results').innerHTML = ''; document.getElementById('search-input').value = ''; }
+function openMobile() { document.getElementById('mobile-menu').classList.add('open'); }
+function closeMobile() { document.getElementById('mobile-menu').classList.remove('open'); }
+function toggleProfileMenu() { document.getElementById('profile-dropdown').classList.toggle('hidden'); }
+
+document.getElementById('search-input').addEventListener('input', function(e) {
+  const q = e.target.value.toLowerCase();
+  const res = document.getElementById('search-results');
+  if (!q) { res.innerHTML = ''; return; }
+  const matches = products.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+  res.innerHTML = matches.length ? matches.map(p => `<div class="flex items-center gap-3 p-2 hover:bg-gray-100 rounded cursor-pointer" onclick="closeSearch();navigate('detail',${p.id})"><img src="${getImgSrc(p.imgId)}" class="w-12 h-12 object-cover rounded"><div><p class="font-medium text-sm">${p.name}</p><p class="text-xs text-gray-500">${fmt(p.price)}</p></div></div>`).join('') : '<p class="text-gray-500 text-sm p-2">Tidak ditemukan</p>';
+});
+
+function productCard(p) {
+  const discount = Math.round((1 - p.price/p.oldPrice)*100);
+  return `<div class="product-card bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer" onclick="navigate('detail',${p.id})">
+    <div class="aspect-square overflow-hidden relative"><img src="${getImgSrc(p.imgId)}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt="${p.name}" loading="lazy">${discount>0?`<span class="absolute top-2 left-2 bg-[#c77b2e] text-white text-xs px-2 py-0.5 rounded">${discount}% OFF</span>`:''}</div>
+    <div class="p-3"><h4 class="font-medium text-sm">${p.name}</h4><p class="text-[#c77b2e] font-semibold text-sm mt-1">${fmt(p.price)}</p><p class="line-through-price">${fmt(p.oldPrice)}</p>
+    <div class="flex items-center justify-between mt-2"><span class="text-xs text-[#c77b2e]">${stars(p.stars)}</span><button onclick="event.stopPropagation();addToCart(${p.id})" class="bg-[#3d2814] text-white w-7 h-7 rounded-full flex items-center justify-center text-lg hover:bg-[#c77b2e] transition">+</button></div></div></div>`;
+}
+
+function renderHome() {
+  const catIcons = {
+    'Home Decor':'<i data-lucide="home" style="width:24px;height:24px;color:#c77b2e;"></i>',
+    'Accessories':'<i data-lucide="gem" style="width:24px;height:24px;color:#c77b2e;"></i>',
+    'Apparel':'<i data-lucide="shirt" style="width:24px;height:24px;color:#c77b2e;"></i>',
+    'Bags & Pouch':'<i data-lucide="shopping-bag" style="width:24px;height:24px;color:#c77b2e;"></i>',
+    'Straps':'<i data-lucide="link" style="width:24px;height:24px;color:#c77b2e;"></i>'
+  };
+  document.getElementById('app').innerHTML = `
+  <section class="page-enter relative w-full" style="height:calc(70 * min(var(--vh,1vh),1vh))">
+    <div class="carousel-container">
+      <div class="carousel-slide active"><img src="${getImgSrc('hero-img-1')}" class="w-full h-full object-cover" alt="Hero 1"></div>
+      <div class="carousel-slide"><img src="${getImgSrc('hero-img-2')}" class="w-full h-full object-cover" alt="Hero 2"></div>
+      <div class="carousel-slide"><img src="${getImgSrc('hero-img-3')}" class="w-full h-full object-cover" alt="Hero 3"></div>
+      <div class="absolute inset-0 bg-black/50"></div>
+      <button class="carousel-btn prev" onclick="prevSlide()" aria-label="Previous slide"><i data-lucide="chevron-left" style="width:24px;height:24px;"></i></button>
+      <button class="carousel-btn next" onclick="nextSlide()" aria-label="Next slide"><i data-lucide="chevron-right" style="width:24px;height:24px;"></i></button>
+      <div class="carousel-dots">
+        <div class="carousel-dot active" onclick="goToSlide(0)"></div>
+        <div class="carousel-dot" onclick="goToSlide(1)"></div>
+        <div class="carousel-dot" onclick="goToSlide(2)"></div>
+      </div>
+    </div>
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 pointer-events-none">
+      <h1 class="font-display italic text-4xl md:text-6xl font-bold mb-4">Tradition Re-imagined</h1>
+      <p class="text-lg md:text-xl max-w-xl opacity-90 mb-6">Menghadirkan warisan budaya Nusantara lewat karya tangan para pengrajin lokal.</p>
+      <button onclick="navigate('shop')" class="border-2 border-white px-8 py-3 font-semibold hover:bg-white hover:text-[#3d2814] transition pointer-events-auto">Jelajahi Koleksi Kami</button>
+    </div>
+  </section>
+  <section class="scroll-section relative py-12">
+    <img src="assets/kategoribg.png" class="absolute inset-0 w-full h-full object-cover" alt="">
+    <div class="absolute inset-0"></div>
+    <div class="relative max-w-7xl mx-auto px-4">
+      <h2 class="text-center font-display text-2xl font-bold mb-8 text-gray-500 mb-4">Kategori Produk</h2>
+      <div class="flex flex-wrap justify-center gap-6">${['Home Decor','Accessories','Apparel','Bags & Pouch','Straps'].map(c => `<button onclick="navigate('shop','${c}')" class="flex flex-col items-center gap-2 group"><div class="w-16 h-16 rounded-2xl bg-[#3d2814]/10 border border-[#c77b2e]/30 flex items-center justify-center group-hover:bg-white group-hover:text-grey transition">${catIcons[c]}</div><span class="text-xs font-medium text-[#c77b2e]">${c}</span></button>`).join('')}</div>
+    </div>
+  </section>
+  <section class="scroll-section max-w-7xl mx-auto px-4 pb-8 grid md:grid-cols-3 gap-4">
+    <div class="relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer" onclick="navigate('shop')"><img src="${getImgSrc('banner-ethical-img')}" class="w-full h-full object-cover" loading="lazy" alt="Ethical"><div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white text-center p-4"><h3 class="font-display italic text-lg mb-2">Always Ethical & Beautiful</h3><p class="text-xs opacity-90">Dibuat dengan cinta oleh pengrajin lokal</p></div></div>
+    <div class="relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer" onclick="navigate('shop')"><img src="${getImgSrc('banner-collection-img')}" class="w-full h-full object-cover" loading="lazy" alt="Collection"><div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white text-center p-4"><h3 class="font-display italic text-lg mb-2">Best Collection by Years</h3><p class="text-xs opacity-90">Diskon 50% untuk koleksi pilihan</p></div></div>
+    <div class="relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer" onclick="navigate('shop')"><img src="${getImgSrc('banner-introduction-img')}" class="w-full h-full object-cover" loading="lazy" alt="Introduction"><div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white text-center p-4"><h3 class="font-display italic text-lg mb-2">Introduction Our Products</h3><p class="text-xs opacity-90">Kenali cerita di balik setiap karya</p></div></div>
+  </section>
+  <section class="scroll-section max-w-7xl mx-auto px-4 py-8"><h2 class="font-bold text-xl mb-6">Produk Terbaru</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">${products.slice(0,4).map(productCard).join('')}</div>
+    <div class="text-center mt-6"><button onclick="navigate('shop')" class="border-2 border-[#3d2814] px-6 py-2 rounded-full font-medium hover:bg-[#3d2814] hover:text-white transition">Lihat Semua Produk</button></div>
+    <div class="w-full px-6 md:px-12 py-8 scroll-fade" data-scroll-fade="">
+    <div data-template-id="article-banner-bg" class="canva-banner relative w-full rounded-lg overflow-hidden py-16 px-8 flex items-center justify-center" style="background: rgb(61, 43, 31);">
+     <img data-template-id="article-banner-img" class="canva-image absolute inset-0 w-full h-full object-cover" loading="lazy" src="https://img.era.id/vilT8jsQgzBXsdCXmkAivu4Icwa4xh42K4Sgv_ajLaQ/rs:fill:1280:720/g:sm/bG9jYWw6Ly8vcHVibGlzaGVycy8xNDMzMDYvMjAyMzEyMDUxNzI1LW1haW4uanBn.jpg" alt="Worker processes fabric in a textile factory">
+     <div class="absolute inset-0 bg-black/50"></div>
+     <div class="relative text-center max-w-3xl">
+      <p data-template-id="article-banner-text" class="canva-text font-display text-2xl md:text-4xl leading-snug" style="color: rgb(255, 255, 255); font-weight: 700; font-style: italic; font-size: 16px;">We Have Taken a Big Leap by Combining Our Main Process and Products</p>
+     </div>
+    </div>
+    </section>
+  <section class="scroll-section max-w-7xl mx-auto px-4 py-10"><h2 class="font-bold text-xl mb-6">Artikel Terbaru</h2>
+    <div class="grid md:grid-cols-3 gap-6">${articles.slice(0,3).map(a => `<div class="bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition" onclick="navigate('article',${a.id})"><img src="${getImgSrc(a.imgId)}" class="w-full h-48 object-cover" loading="lazy" alt="${a.title}"><div class="p-4"><h4 class="font-semibold text-sm mb-2">${a.title}</h4><p class="text-xs text-gray-600 mb-3 line-clamp-3">${a.desc}</p><span class="text-xs text-[#c77b2e] font-semibold">Read More →</span></div></div>`).join('')}</div>
+    <div class="text-center mt-6"><button onclick="navigate('nokepedia')" class="border-2 border-[#3d2814] px-6 py-2 rounded-full font-medium hover:bg-[#3d2814] hover:text-white transition">Buka Nokepedia</button></div>
+  </section>
+  <section class="scroll-section relative py-10">
+    <img src="${getImgSrc('cta-bg-img')}" class="absolute inset-0 w-full h-full object-cover" alt="">
+    <div class="absolute inset-0 bg-[#3d2814]/85"></div>
+    <div class="relative max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-white">
+      <div><h3 class="font-display italic font-bold text-xl">Setiap produk memiliki cerita</h3><p class="text-sm opacity-80 mt-1">Lestarikan budaya, ayo dukung masa depan dengan kami!</p></div>
+      <button onclick="navigate('about')" class="bg-[#c77b2e] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#a8631f] transition">Dukung kami</button>
+    </div>
+  </section>`;
+}
+
+function renderShop(filterCat) {
+  const categories = ['Home Decor','Accessories','Apparel','Bags & Pouch','Straps'];
+  let html = `<section class="page-enter">
+    <div class="relative py-12">
+      <img src="assets/kategoribg.png" class="absolute inset-0 w-full h-full object-cover" alt="">
+      <div class="absolute inset-0"></div>
+      <div class="relative max-w-7xl mx-auto px-4">
+        <p class="text-sm text-grey/70 mb-4"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › Shop</p>
+        <h2 class="font-display text-2xl font-bold text-center mb-6 text-grey">Kategori Produk</h2>
+        <div class="flex flex-wrap justify-center gap-3">${categories.map(c => `<button onclick="navigate('shop','${c}')" class="px-5 py-2 rounded-full text-sm font-medium transition ${filterCat===c?'bg-[#c77b2e] text-[#c77b2e]':'bg-white/10 border border-[#c77b2e]/30 text-[#c77b2e] hover:bg-white/80'}">${c}</button>`).join('')}
+        <button onclick="navigate('shop')" class="px-5 py-2 rounded-full text-sm font-medium transition ${!filterCat?'bg-[#c77b2e] text-white':'bg-white/10 border border-white/30 text-grey hover:bg-white/20'}">All Products</button></div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 py-8">`;
+  const filtered = filterCat ? products.filter(p => p.category === filterCat) : products;
+  if (filterCat) {
+    html += `<h3 class="font-display text-xl font-bold text-center text-[#c77b2e] mb-6">${filterCat}</h3>`;
+    html += `<div class="grid grid-cols-2 md:grid-cols-4 gap-4">${filtered.map(productCard).join('')}</div>`;
+  } else {
+    categories.forEach(cat => {
+      const items = products.filter(p => p.category === cat);
+      html += `<div class="mb-10"><h3 class="font-display text-xl font-bold text-center text-[#c77b2e] mb-4">${cat}</h3><div class="grid grid-cols-2 md:grid-cols-4 gap-4">${items.map(productCard).join('')}</div></div>`;
+    });
+  }
+  html += '</div></section>';
+  document.getElementById('app').innerHTML = html;
+}
+
+function renderDetail(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) { navigate('home'); return; }
+  const discount = Math.round((1 - p.price/p.oldPrice)*100);
+  const similar = products.filter(x => x.id !== p.id && x.category === p.category).slice(0,4);
+  document.getElementById('app').innerHTML = `<section class="page-enter max-w-7xl mx-auto px-4 py-8">
+    <p class="text-sm text-gray-500 mb-4"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › <span class="cursor-pointer hover:underline" onclick="navigate('shop')">Shop</span> › ${p.name}</p>
+    <div class="grid md:grid-cols-2 gap-10">
+      <div>
+        <img src="${getImgSrc(p.imgId)}" class="w-full rounded-xl aspect-square object-cover" alt="${p.name}">
+        <div class="mt-4 bg-gray-50 rounded-xl p-4">
+          <h4 class="font-semibold text-sm mb-2">Delivery Options</h4>
+          <div class="flex gap-2 items-center mb-2"><input type="text" id="zipcode-input" placeholder="Enter PIN code" class="border rounded px-3 py-2 text-sm flex-1"><button onclick="showToast('Delivery tersedia!')" class="bg-[#3d2814] text-white px-4 py-2 rounded text-sm">Check</button></div>
+          <p class="text-xs text-gray-500">Please enter PIN code to check delivery time & Pay on Delivery Availability</p>
+          <p class="text-xs text-gray-400 mt-1">Free on delivery might be available</p>
+          <p class="text-xs text-gray-400">Cash & Pay on delivery might be available</p>
+        </div>
+      </div>
+      <div>
+        <p class="text-sm text-[#c77b2e] mb-1">${stars(p.stars)} <span class="text-gray-500">${p.stars*20+12} Reviews</span></p>
+        <h1 class="text-2xl font-bold mb-1">${p.name}</h1>
+        <p class="text-gray-500 text-sm mb-4">${p.category}</p>
+        <p class="text-2xl font-bold text-[#3d2814]">${fmt(p.price)} <span class="line-through-price ml-2">${fmt(p.oldPrice)}</span> ${discount>0?`<span class="text-sm text-green-600 ml-2">(${discount}% OFF)</span>`:''} <span class="text-xs text-gray-500 ml-2">Stok Terbatas</span></p>
+        <p class="text-xs text-gray-500 mt-1">Inclusions of all taxes</p>
+        <div class="mt-5"><p class="font-semibold text-sm mb-2">More Color</p><div class="flex gap-2" id="color-swatches">${p.colors.map((c,i) => `<div class="color-swatch ${i===0?'selected':''}" style="background:${c}" onclick="selectColor(this)"></div>`).join('')}</div></div>
+        <div class="mt-5"><p class="font-semibold text-sm mb-2">Select Size</p><div class="flex gap-2">${['XS','S','M','L','XL','XXL'].map(s => `<button class="size-btn border border-gray-300 w-10 h-10 rounded text-sm hover:border-[#c77b2e] hover:text-[#c77b2e] transition" onclick="this.parentElement.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('bg-[#c77b2e]','text-white','border-[#c77b2e]'));this.classList.add('bg-[#c77b2e]','text-white','border-[#c77b2e]')">${s}</button>`).join('')}</div></div>
+        <button onclick="addToCart(${p.id})" class="mt-6 w-full bg-[#3d2814] text-white px-10 py-3 rounded-full font-semibold flex items-center justify-center gap-2 hover:bg-[#c77b2e] transition"><i data-lucide="shopping-bag" style="width:18px;height:18px;"></i> Add to Cart</button>
+        <div class="mt-6 border-t pt-4">
+          <div class="detail-tabs">
+            <button onclick="switchTab('details',this)" class="tab-btn tab-active py-2 px-4 text-sm">Products Details</button>
+            <button onclick="switchTab('specs',this)" class="tab-btn py-2 px-4 text-sm text-gray-500">Specifications</button>
+            <button onclick="switchTab('reviews',this)" class="tab-btn py-2 px-4 text-sm text-gray-500">Customer Reviews</button>
+          </div>
+          <div id="tab-details" class="mt-4 text-sm text-gray-700"><p>Produk handmade dari bahan alami berkualitas tinggi. Dibuat oleh pengrajin lokal Papua dengan teknik tradisional yang diwariskan turun-temurun. Setiap produk memiliki keunikan tersendiri.</p></div>
+          <div id="tab-specs" class="mt-4 text-sm text-gray-700 hidden"><p><strong>Material:</strong> Serat alam / Benang katun</p><p><strong>Ukuran:</strong> Bervariasi</p><p><strong>Berat:</strong> 100-300gr</p><p><strong>Warna:</strong> Pewarna alami</p><p><strong>Perawatan:</strong> Cuci tangan dengan air dingin</p></div>
+          <div id="tab-reviews" class="mt-4 hidden">
+            <div class="space-y-3 mb-4">
+              <div class="bg-gray-50 rounded-lg p-3"><p class="text-xs text-[#c77b2e]">${stars(5)}</p><p class="text-sm mt-1">Produk sangat bagus! Kualitas rajutan rapih.</p><p class="text-xs text-gray-400 mt-1">- Sari, 2 hari lalu</p></div>
+              <div class="bg-gray-50 rounded-lg p-3"><p class="text-xs text-[#c77b2e]">${stars(4)}</p><p class="text-sm mt-1">Warna sesuai gambar, pengiriman cepat.</p><p class="text-xs text-gray-400 mt-1">- Rina, 1 minggu lalu</p></div>
+            </div>
+            <div class="border-t pt-3"><h4 class="font-semibold text-sm mb-2">Tulis Ulasan</h4>
+              <div class="flex gap-1 mb-2" id="review-stars">${[1,2,3,4,5].map(i => `<button onclick="setReviewStar(${i})" class="text-gray-300 text-xl review-star">★</button>`).join('')}</div>
+              <textarea id="review-text" placeholder="Tulis ulasan Anda..." class="w-full border rounded-lg p-2 text-sm" rows="3"></textarea>
+              <button onclick="submitReview()" class="mt-2 bg-[#c77b2e] text-white px-4 py-2 rounded text-sm">Kirim Ulasan</button>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 border-t pt-4">
+          <h4 class="font-semibold text-sm mb-2">Kode Diskon</h4>
+          <div class="flex gap-2"><input type="text" id="discount-input" placeholder="Enter kode diskon" class="border rounded px-3 py-2 text-sm flex-1"><button onclick="applyDiscount()" class="bg-[#c77b2e] text-white px-4 py-2 rounded text-sm">Apply</button></div>
+        </div>
+      </div>
+    </div>
+    ${similar.length ? `<div class="mt-12"><h3 class="font-bold text-lg mb-4">Produk Serupa</h3><div class="grid grid-cols-2 md:grid-cols-4 gap-4">${similar.map(productCard).join('')}</div></div>` : ''}
+  </section>`;
+}
+
+function selectColor(el) { el.parentElement.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected')); el.classList.add('selected'); }
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('tab-active'); b.classList.add('text-gray-500'); });
+  btn.classList.add('tab-active'); btn.classList.remove('text-gray-500');
+  document.getElementById('tab-details').classList.add('hidden');
+  document.getElementById('tab-specs').classList.add('hidden');
+  document.getElementById('tab-reviews').classList.add('hidden');
+  document.getElementById('tab-'+tab).classList.remove('hidden');
+}
+let reviewStarVal = 0;
+function setReviewStar(n) { reviewStarVal = n; document.querySelectorAll('.review-star').forEach((s,i) => { s.style.color = i < n ? '#c77b2e' : '#ccc'; }); }
+function submitReview() { const text = document.getElementById('review-text').value; if (text && reviewStarVal) { showToast('Ulasan terkirim!'); document.getElementById('review-text').value = ''; reviewStarVal = 0; document.querySelectorAll('.review-star').forEach(s => s.style.color = '#ccc'); } }
+function applyDiscount() { const code = document.getElementById('discount-input').value; if (code) { discountCode = code; showToast('Kode diskon diterapkan!'); } }
+
+function renderCart() {
+  const app = document.getElementById('app');
+  if (!cart.length) {
+    app.innerHTML = `<section class="page-enter max-w-7xl mx-auto px-4 py-16 text-center"><i data-lucide="shopping-bag" style="width:64px;height:64px;color:#ccc;margin:0 auto;"></i><h2 class="text-xl font-bold mt-4">Keranjang Belanja Kosong</h2><p class="text-gray-500 mt-2">Belum ada produk di keranjang.</p><button onclick="navigate('shop')" class="mt-6 bg-[#c77b2e] text-white px-6 py-3 rounded-full font-semibold">Belanja Sekarang</button></section>`;
+    return;
+  }
+  const subtotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  app.innerHTML = `<section class="page-enter max-w-7xl mx-auto px-4 py-8">
+    <p class="text-sm text-gray-500 mb-2"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › Cart</p>
+    <h2 class="text-xl font-bold mb-6">Keranjang Belanja</h2>
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+      <table class="w-full">
+        <thead><tr class="border-b text-sm text-gray-600"><th class="text-left p-4 font-medium">Produk</th><th class="p-4 font-medium">Harga</th><th class="p-4 font-medium">Jumlah</th><th class="p-4 font-medium">Subtotal</th><th class="p-4 w-10"></th></tr></thead>
+        <tbody>${cart.map((item,i) => `<tr class="border-b">
+          <td class="p-4"><div class="flex gap-3 items-center"><img src="${getImgSrc(item.imgId)}" class="w-16 h-16 object-cover rounded" alt="${item.name}"><div><p class="font-medium text-sm">${item.name}</p><p class="text-xs text-gray-400">${item.category}</p><p class="text-xs text-gray-400">Size: ${item.size}</p><p class="text-xs text-[#c77b2e]">${stars(item.stars)}</p></div></div></td>
+          <td class="p-4 text-center text-sm">${fmt(item.price)}<br><span class="line-through-price">${fmt(item.oldPrice)}</span></td>
+          <td class="p-4 text-center"><div class="flex items-center justify-center gap-1"><button onclick="changeQty(${i},-1)" class="w-7 h-7 border rounded flex items-center justify-center text-sm">-</button><span class="text-sm font-medium w-8 text-center">${item.qty}</span><button onclick="changeQty(${i},1)" class="w-7 h-7 border rounded flex items-center justify-center text-sm">+</button></div></td>
+          <td class="p-4 text-center font-semibold text-sm">${fmt(item.price*item.qty)}</td>
+          <td class="p-4 text-center"><button onclick="removeItem(${i})" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button></td>
+        </tr>`).join('')}</tbody>
+      </table>
+      <div class="flex justify-end items-center gap-8 p-6 border-t">
+        <span class="font-bold text-lg">Subtotal</span>
+        <span class="font-bold text-xl text-[#3d2814]">${fmt(subtotal)}</span>
+      </div>
+      <div class="flex justify-end px-6 pb-6"><button onclick="placeOrder()" id="place-order-btn" class="bg-[#3d2814] text-white px-10 py-3 rounded-full font-semibold hover:bg-[#c77b2e] transition">Place Order</button></div>
+    </div>
+  </section>`;
+}
+
+async function placeOrder() {
+  const btn = document.getElementById('place-order-btn');
+  btn.disabled = true; btn.textContent = 'Memproses...';
+  for (const item of cart) {
+    if (orders.length >= 999) { showToast('Batas pesanan tercapai!'); btn.disabled = false; btn.textContent = 'Place Order'; return; }
+    const result = await window.dataSdk.create({
+      product_name: item.name, product_id: item.id, quantity: item.qty, size: item.size, price: item.price * item.qty, status: 'diproses', order_date: new Date().toISOString(),
+      user_name: currentUser ? currentUser.name : '', user_email: currentUser ? currentUser.email : '', user_phone: currentUser ? currentUser.phone : '', user_address: currentUser ? currentUser.address : '', user_profile_id: currentUser ? currentUser.id : 0
+    });
+    if (result.isError) { showToast('Gagal membuat pesanan'); btn.disabled = false; btn.textContent = 'Place Order'; return; }
+  }
+  cart = []; updateCartBadge(); showToast('Order berhasil!'); navigate('orders');
+}
+
+function renderOrders() {
+  const app = document.getElementById('app');
+  const statusTabs = ['semua','diproses','dikirim','selesai'];
+  app.innerHTML = `<section class="page-enter max-w-7xl mx-auto px-4 py-8">
+    <h2 class="font-display text-2xl font-bold mb-6">Pesanan Saya</h2>
+    <div class="flex gap-3 mb-6" id="order-tabs">${statusTabs.map(s => `<button onclick="filterOrders('${s}')" class="order-tab px-4 py-2 rounded-full text-sm font-medium transition ${s==='semua'?'bg-[#c77b2e] text-white':'bg-white border border-[#c77b2e] text-[#c77b2e]'}">${s.charAt(0).toUpperCase()+s.slice(1)}</button>`).join('')}</div>
+    <div id="orders-list"></div>
+  </section>`;
+  filterOrders('semua');
+}
+
+function filterOrders(status) {
+  document.querySelectorAll('.order-tab').forEach((b,i) => { const tabs=['semua','diproses','dikirim','selesai']; b.className = tabs[i]===status ? 'order-tab px-4 py-2 rounded-full text-sm font-medium transition bg-[#c77b2e] text-white' : 'order-tab px-4 py-2 rounded-full text-sm font-medium transition bg-white border border-[#c77b2e] text-[#c77b2e]'; });
+  const filtered = status === 'semua' ? orders : orders.filter(o => o.status === status);
+  const container = document.getElementById('orders-list');
+  if (!filtered.length) { container.innerHTML = '<p class="text-gray-500 text-center py-8">Belum ada pesanan.</p>'; return; }
+  const statusColors = {diproses:'bg-yellow-100 text-yellow-800',dikirim:'bg-blue-100 text-blue-800',selesai:'bg-green-100 text-green-800'};
+  container.innerHTML = filtered.map(o => {
+    const p = products.find(x => x.id === o.product_id);
+    const imgSrc = p ? getImgSrc(p.imgId) : '';
+    const date = new Date(o.order_date).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+    return `<div class="bg-white rounded-lg p-4 mb-3 shadow-sm flex items-center gap-4">
+      ${imgSrc ? `<img src="${imgSrc}" class="w-16 h-16 object-cover rounded" alt="${o.product_name}">` : ''}
+      <div class="flex-1"><p class="font-semibold text-sm">${o.product_name}</p><p class="text-xs text-gray-500">Qty: ${o.quantity} · Size: ${o.size} · ${date}</p></div>
+      <div class="text-right"><p class="font-bold text-sm text-[#3d2814]">${fmt(o.price)}</p><span class="text-xs px-2 py-1 rounded-full ${statusColors[o.status]||''}">${o.status}</span></div>
+      ${o.status==='diproses'?`<button onclick="updateOrderStatus('${o.__backendId}','dikirim')" class="text-xs bg-blue-500 text-white px-3 py-1 rounded-full">Kirim</button>`:''}
+      ${o.status==='dikirim'?`<button onclick="updateOrderStatus('${o.__backendId}','selesai')" class="text-xs bg-green-500 text-white px-3 py-1 rounded-full">Selesai</button>`:''}
+    </div>`;
+  }).join('');
+  lucide.createIcons();
+}
+
+async function updateOrderStatus(id, newStatus) {
+  const order = orders.find(o => o.__backendId === id);
+  if (!order) return;
+  const result = await window.dataSdk.update({...order, status: newStatus});
+  if (result.isOk) showToast('Status diperbarui!');
+  else showToast('Gagal memperbarui status');
+}
+
+function renderNokepedia() {
+  document.getElementById('app').innerHTML = `<section class="page-enter max-w-7xl mx-auto px-4 py-8">
+    <p class="text-sm text-gray-500 mb-2"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › Nokepedia</p>
+    <h1 class="font-display text-3xl font-bold mb-8">Nokepedia</h1>
+    <div class="grid md:grid-cols-2 gap-6">${articles.map(a => `<div class="bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition" onclick="navigate('article',${a.id})">
+      <img src="${getImgSrc(a.imgId)}" class="w-full h-52 object-cover" loading="lazy" alt="${a.title}">
+      <div class="p-5"><h3 class="font-bold mb-2">${a.title}</h3><p class="text-sm text-gray-600 mb-3 line-clamp-3">${a.desc}</p><span class="text-sm text-[#c77b2e] font-semibold">Read More →</span><p class="text-xs text-gray-400 mt-2">${a.date} · ${a.views} views</p></div>
+    </div>`).join('')}</div>
+  </section>`;
+}
+
+function renderArticle(id) {
+  const a = articles.find(x => x.id === id);
+  if (!a) { navigate('nokepedia'); return; }
+  document.getElementById('app').innerHTML = `<section class="page-enter max-w-4xl mx-auto px-4 py-8">
+    <p class="text-sm text-gray-500 mb-2"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › <span class="cursor-pointer hover:underline" onclick="navigate('nokepedia')">Nokepedia</span></p>
+    <img src="${getImgSrc(a.imgId)}" class="w-full h-64 md:h-96 object-cover rounded-xl mb-6" alt="${a.title}">
+    <h1 class="font-display text-2xl md:text-3xl font-bold mb-2">${a.title}</h1>
+    <p class="text-sm text-gray-500 mb-6">📅 ${a.date} · 👁 ${a.views}</p>
+    <div class="prose max-w-none text-gray-700 leading-relaxed">${a.content}</div>
+    <div class="mt-10 border-t pt-6"><h3 class="font-bold mb-4">Artikel Lainnya</h3>
+      <div class="grid md:grid-cols-3 gap-4">${articles.filter(x=>x.id!==a.id).slice(0,3).map(x => `<div class="bg-white rounded-lg overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition" onclick="navigate('article',${x.id})"><img src="${getImgSrc(x.imgId)}" class="w-full h-32 object-cover" loading="lazy"><div class="p-3"><p class="font-semibold text-xs">${x.title}</p><span class="text-xs text-[#c77b2e]">Read More →</span></div></div>`).join('')}</div>
+    </div>
+  </section>`;
+}
+
+function renderAbout() {
+  document.getElementById('app').innerHTML = `<section class="page-enter">
+    <div class="relative w-full h-64 md:h-96"><img src="${getImgSrc('about-hero-img')}" class="absolute inset-0 w-full h-full object-cover" alt="About Hero"><div class="absolute inset-0 bg-black/40"></div></div>
+    <div class="max-w-4xl mx-auto px-4 py-10">
+      <p class="text-sm text-gray-500 mb-2"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › About Us</p>
+      <h1 class="font-display text-3xl font-bold mb-2">Tentang Kami</h1>
+      <h2 class="font-display italic text-2xl md:text-4xl text-center font-bold my-8">Tradition Re-imagined</h2>
+      <p class="text-center text-gray-600 mb-8">"Menghadirkan warisan budaya Nusantara lewat karya tangan para pengrajin lokal."</p>
+      <div class="text-gray-700 leading-relaxed space-y-4">
+        <p>NOKEA lahir dari keinginan untuk memperkenalkan kembali Noken Papua kepada generasi masa kini melalui pendekatan yang lebih relevan dengan gaya hidup modern. Kami percaya bahwa sebuah produk tidak hanya memiliki fungsi, tetapi juga mampu membawa cerita, nilai budaya, dan identitas yang patut untuk dilestarikan.</p>
+        <p>engan mengadaptasi teknik anyaman dan filosofi Noken ke dalam berbagai produk lifestyle, seperti aksesori, home living, perlengkapan dapur, hingga dekorasi rumah, NOKEA menghadirkan karya yang memadukan tradisi dan inovasi. Setiap produk dibuat dengan memperhatikan kualitas, estetika, serta keberlanjutan agar dapat digunakan dalam kehidupan sehari-hari tanpa menghilangkan nilai budaya yang terkandung di dalamnya.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 my-8">
+        <div class="bg-[#c77b2e] text-white rounded-xl p-6 text-center"><h4 class="font-bold mb-2">Visi</h4><p class="text-sm">Menjadi startup lifestyle lokal yang mengangkat warisan budaya Papua melalui inovasi produk modern, berkualitas, dan berkelanjutan, sehingga budaya Indonesia tetap hidup dan relevan di tengah perkembangan zaman.</p></div>
+        <div class="bg-[#c77b2e] text-white rounded-xl p-6"><h4 class="font-bold mb-2 text-center">Misi</h4><ul class="text-sm list-disc list-inside space-y-1"><li>Melestarikan budaya Noken</li><li>Memberdayakan pengrajin lokal Papua</li><li>Menghasilkan produk berkualitas tinggi</li><li>Mengenalkan budaya Indonesia kepada generasi muda</li></ul></div>
+      </div>
+      <h3 class="font-bold text-xl mt-10 mb-6">Tim Nokea</h3>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-6">${teamMembers.map(t => `<div class="text-center"><img src="${getImgSrc(t.imgId)}" class="w-24 h-24 rounded-full object-cover mx-auto mb-2" alt="${t.name}" loading="lazy"><p class="font-semibold text-sm">${t.name}</p><p class="text-xs text-gray-500">${t.role}</p></div>`).join('')}</div>
+    </div>
+  </section>`;
+}
+
+function renderAbout() {
+  const stats = [
+    {value:'1000+',label:'Produk Terjual',icon:'shopping-bag'},
+    {value:'50+',label:'UMKM Partners',icon:'users'},
+    {value:'5000+',label:'Pelanggan Puas',icon:'heart'},
+    {value:'30+',label:'Jenis Produk',icon:'package'}
+  ];
+  document.getElementById('app').innerHTML = `<section class="page-enter">
+    <div class="relative w-full h-64 md:h-96"><img src="${getImgSrc('about-hero-img')}" class="absolute inset-0 w-full h-full object-cover" alt="About Hero"><div class="absolute inset-0 bg-black/40"></div></div>
+    <div class="max-w-4xl mx-auto px-4 py-10">
+      <p class="text-sm text-gray-500 mb-2"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › About Us</p>
+      <h1 class="font-display text-3xl font-bold mb-2">Tentang Kami</h1>
+      <h2 class="font-display italic text-2xl md:text-4xl text-center font-bold my-8">Tradition Re-imagined</h2>
+      <p class="text-center text-gray-600 mb-8">Menghadirkan warisan budaya Nusantara lewat karya tangan para pengrajin lokal.</p>
+      <div class="text-gray-700 leading-relaxed space-y-4">
+        <p>NOKEA lahir dari keinginan untuk memperkenalkan kembali Noken Papua kepada generasi masa kini melalui pendekatan yang lebih relevan dengan gaya hidup modern.</p>
+        <p>Dengan mengadaptasi teknik anyaman dan filosofi Noken ke dalam berbagai produk lifestyle, NOKEA menghadirkan karya yang memadukan tradisi dan inovasi.</p>
+      </div>
+      <div class="grid md:grid-cols-4 gap-4 my-10 bg-gradient-to-br from-[#3d2814] to-[#5c3f1f] rounded-xl p-8">
+        ${stats.map(stat => `<div class="text-center text-white">
+          <div class="flex justify-center mb-3"><i data-lucide="${stat.icon}" style="width:32px;height:32px;color:#c77b2e;"></i></div>
+          <p class="text-3xl font-bold text-[#c77b2e] mb-1">${stat.value}</p>
+          <p class="text-sm opacity-90">${stat.label}</p>
+        </div>`).join('')}
+      </div>
+      <div class="grid md:grid-cols-2 gap-4 my-8">
+        <div class="bg-[#c77b2e] text-white rounded-xl p-6 text-center"><h4 class="font-bold mb-2">Visi</h4><p class="text-sm">MMenjadi startup lifestyle lokal yang mengangkat warisan budaya Papua melalui inovasi produk modern, berkualitas, dan berkelanjutan, sehingga budaya Indonesia tetap hidup dan relevan di tengah perkembangan zaman.</p></div>
+        <div class="bg-[#c77b2e] text-white rounded-xl p-6"><h4 class="font-bold mb-2 text-center">Misi</h4><ul class="text-sm list-disc list-inside space-y-1"><li>Melestarikan budaya Noken</li><li>Memberdayakan pengrajin lokal Papua</li><li>Menghasilkan produk berkualitas tinggi</li><li>Mengenalkan budaya Indonesia kepada generasi muda</li></ul></div>
+      </div>
+      <h3 class="font-bold text-xl mt-10 mb-6">Tim Nokea</h3>
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-6">${teamMembers.map(t => `<div class="text-center"><img src="${getImgSrc(t.imgId)}" class="w-24 h-24 rounded-full object-cover mx-auto mb-2" alt="${t.name}" loading="lazy"><p class="font-semibold text-sm">${t.name}</p><p class="text-xs text-gray-500">${t.role}</p></div>`).join('')}</div>
+    </div>
+  </section>`;
+}
+
+function editAddress() { document.getElementById('edit-address-form').classList.remove('hidden'); }
+function cancelEdit() { document.getElementById('edit-address-form').classList.add('hidden'); }
+function saveAddress() { const addr = document.getElementById('edit-addr').value; if (addr) { currentUser.address = addr; showToast('Alamat berhasil diubah!'); renderAccount(); lucide.createIcons(); } }
+
+function renderLogin() {
+  document.getElementById('app').innerHTML = `<section class="page-enter max-w-md mx-auto px-4 py-16">
+    <div class="bg-white rounded-xl shadow-lg p-8">
+      <h2 class="font-display text-2xl font-bold text-center mb-6">Masuk / Daftar</h2>
+      <form onsubmit="event.preventDefault();handleAuth()" class="space-y-4">
+        <div><label for="auth-name" class="text-sm font-medium text-gray-700 block mb-1">Nama</label><input id="auth-name" type="text" placeholder="Nama lengkap" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#c77b2e]" required></div>
+        <div><label for="auth-email" class="text-sm font-medium text-gray-700 block mb-1">Email</label><input id="auth-email" type="email" placeholder="email@contoh.com" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#c77b2e]" required></div>
+        <div><label for="auth-phone" class="text-sm font-medium text-gray-700 block mb-1">Telepon</label><input id="auth-phone" type="tel" placeholder="081xxxxxxxxx" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#c77b2e]" required></div>
+        <div><label for="auth-address" class="text-sm font-medium text-gray-700 block mb-1">Alamat</label><textarea id="auth-address" placeholder="Jl. Nama jalan, No., Kota" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#c77b2e]" rows="3" required></textarea></div>
+        <button type="submit" class="w-full bg-[#3d2814] text-white py-3 rounded-lg font-semibold hover:bg-[#c77b2e] transition">Simpan Profil</button>
+      </form>
+    </div>
+  </section>`;
+}
+
+function handleAuth() {
+  const name = document.getElementById('auth-name').value;
+  const email = document.getElementById('auth-email').value;
+  const phone = document.getElementById('auth-phone').value;
+  const address = document.getElementById('auth-address').value;
+  if (name && email && phone && address) { currentUser = {name,email,phone,address,id:Date.now()}; showToast('Profil berhasil disimpan!'); navigate('account'); }
+}
+
+function changeQty(i, d) { cart[i].qty = Math.max(1, cart[i].qty + d); updateCartBadge(); renderCart(); lucide.createIcons(); }
+function removeItem(i) { cart.splice(i, 1); updateCartBadge(); renderCart(); lucide.createIcons(); }
+function logout() { currentUser = null; showToast('Logout berhasil'); navigate('home'); }
+
+const dataHandler = {
+  onDataChanged(data) { orders = data; if (currentPage === 'orders') renderOrders(); }
+};
+
+function setupScrollAnimations() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+  
+  document.querySelectorAll('.scroll-section').forEach(el => observer.observe(el));
+}
+
+function animateStatNumber(element) {
+  const statNumber = element.querySelector('.stat-number');
+  const target = parseInt(element.dataset.target);
+  const suffixMap = {'1000':'1000+','50':'50+','5000':'5000+','30':'30+'};
+  const suffix = suffixMap[element.dataset.target] || '+';
+  
+  let current = 0;
+  const increment = Math.ceil(target / 50);
+  const interval = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      statNumber.textContent = suffix;
+      clearInterval(interval);
+    } else {
+      statNumber.textContent = Math.floor(current) + '+';
+    }
+  }, 30);
+}
+
+
+async function initApp() {
+  const result = await window.dataSdk.init(dataHandler);
+  if (result.isError) console.error('SDK init failed');
+  setTimeout(() => { navigate('home'); setupScrollAnimations(); }, 150);
+}
+
+initApp();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a13f4dd21279f90e',t:'MTc4Mjg0NDg3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body></html>
