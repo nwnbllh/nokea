@@ -671,9 +671,24 @@ function animateStatNumber(element) {
 
 
 async function initApp() {
-  const result = await window.dataSdk.init(dataHandler);
-  if (result.isError) console.error('SDK init failed');
-  setTimeout(() => { navigate('home'); setupScrollAnimations(); }, 150);
+
+  try {
+
+    if (window.dataSdk) {
+      const result = await window.dataSdk.init(dataHandler);
+
+      if (result.isError) {
+        console.error(result);
+      }
+    }
+
+  } catch(e) {
+    console.error(e);
+  }
+
+  navigate('home');
+  setupScrollAnimations();
+
 }
 
 initApp();
