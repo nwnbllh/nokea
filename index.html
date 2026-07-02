@@ -447,7 +447,7 @@ function renderCart() {
   const subtotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
   app.innerHTML = `<section class="page-enter max-w-7xl mx-auto px-4 py-8">
     <p class="text-sm text-gray-500 mb-2"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › Cart</p>
-    <h2 class="text-xl font-bold mb-6">Keranjang Belanja</h2>
+   <h2 class="font-display text-xl font-bold mb-6">Keranjang Belanja</h2>
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
       <table class="w-full">
         <thead><tr class="border-b text-sm text-gray-600"><th class="text-left p-4 font-medium">Produk</th><th class="p-4 font-medium">Harga</th><th class="p-4 font-medium">Jumlah</th><th class="p-4 font-medium">Subtotal</th><th class="p-4 w-10"></th></tr></thead>
