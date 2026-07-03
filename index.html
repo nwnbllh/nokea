@@ -448,22 +448,28 @@ function renderCart() {
   app.innerHTML = `<section class="page-enter max-w-7xl mx-auto px-4 py-8">
     <p class="text-sm text-gray-500 mb-2"><span class="cursor-pointer hover:underline" onclick="navigate('home')">Home</span> › Cart</p>
    <h2 class="font-display text-xl font-bold mb-6">Keranjang Belanja</h2>
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm overflow-x-auto verflow-hidden">
       <table class="w-full">
         <thead><tr class="border-b text-sm text-gray-600"><th class="text-left p-4 font-medium">Produk</th><th class="p-4 font-medium">Harga</th><th class="p-4 font-medium">Jumlah</th><th class="p-4 font-medium">Subtotal</th><th class="p-4 w-10"></th></tr></thead>
         <tbody>${cart.map((item,i) => `<tr class="border-b">
-          <td class="p-4"><div class="flex gap-3 items-center"><img src="${getImgSrc(item.imgId)}" class="w-16 h-16 object-cover rounded" alt="${item.name}"><div><p class="font-medium text-sm">${item.name}</p><p class="text-xs text-gray-400">${item.category}</p><p class="text-xs text-gray-400">Size: ${item.size}</p><p class="text-xs text-[#c77b2e]">${stars(item.stars)}</p></div></div></td>
+          <td class="px-2 py-3 md:p-4">
+            <div class="flex gap-3 items-center"><img src="${getImgSrc(item.imgId)}" class="w-12 h-12 md:w-16 md:h-16 flex-shrink-0"
+             object-cover rounded" alt="${item.name}"><div>
+            <p class="font-medium text-sm">${item.name}</p>
+            <p class="text-xs text-gray-400">${item.category}</p><p class="text-xs text-gray-400">Size: ${item.size}</p><p class="text-xs text-[#c77b2e]">${stars(item.stars)}</p></div></div></td>
           <td class="p-4 text-center text-sm">${fmt(item.price)}<br><span class="line-through-price">${fmt(item.oldPrice)}</span></td>
           <td class="p-4 text-center"><div class="flex items-center justify-center gap-1"><button onclick="changeQty(${i},-1)" class="w-7 h-7 border rounded flex items-center justify-center text-sm">-</button><span class="text-sm font-medium w-8 text-center">${item.qty}</span><button onclick="changeQty(${i},1)" class="w-7 h-7 border rounded flex items-center justify-center text-sm">+</button></div></td>
           <td class="p-4 text-center font-semibold text-sm">${fmt(item.price*item.qty)}</td>
           <td class="p-4 text-center"><button onclick="removeItem(${i})" class="text-red-400 hover:text-red-600"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button></td>
         </tr>`).join('')}</tbody>
       </table>
+      </div>
       <div class="flex justify-end items-center gap-8 p-6 border-t">
         <span class="font-bold text-lg">Subtotal</span>
         <span class="font-bold text-xl text-[#3d2814]">${fmt(subtotal)}</span>
       </div>
-      <div class="flex justify-end px-6 pb-6"><button onclick="placeOrder()" id="place-order-btn" class="bg-[#3d2814] text-white px-10 py-3 rounded-full font-semibold hover:bg-[#c77b2e] transition">Place Order</button></div>
+      <div class="flex justify-end px-6 pb-6"><button onclick="placeOrder()" id="place-order-btn" class="bg-[#3d2814] text-white px-10 py-3 rounded-full font-semibold hover:bg-[#c77b2e] transition">Place Order</button>
+        </div>
     </div>
   </section>`;
 }
